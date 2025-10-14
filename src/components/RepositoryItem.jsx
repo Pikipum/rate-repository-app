@@ -1,5 +1,5 @@
 import { View, Image, StyleSheet } from "react-native";
-import { Text } from "react-native";
+import Text from "./Text";
 
 const styles = StyleSheet.create({
   card: {
