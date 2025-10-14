@@ -1,7 +1,5 @@
-import { TextInput } from "react-native-web";
 import Text from "./Text";
-import { View } from "react-native-web";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { useFormik, yupToFormErrors } from "formik";
 import * as yup from "yup";
 
