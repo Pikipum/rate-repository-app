@@ -85,49 +85,52 @@ const formatNumber = (num) => {
   return (num / 1000).toFixed(1).replace(".0", "") + "k";
 };
 
-const RepositoryItem = ({ repository }) => (
-  <View>
-    <View style={styles.card}>
-      <View style={styles.topRow}>
-        <Image
-          style={styles.avatar}
-          source={{ uri: repository.ownerAvatarUrl }}
-        />
-        <View style={styles.info}>
-          <Text style={styles.fullName}>{repository.fullName}</Text>
-          <Text style={styles.description}>{repository.description}</Text>
-          <Text style={styles.language}>{repository.language}</Text>
+const RepositoryItem = ({ repository }) => {
+  if (!repository) return null;
+  return (
+    <View>
+      <View style={styles.card}>
+        <View style={styles.topRow}>
+          <Image
+            style={styles.avatar}
+            source={{ uri: repository.ownerAvatarUrl }}
+          />
+          <View style={styles.info}>
+            <Text style={styles.fullName}>{repository.fullName}</Text>
+            <Text style={styles.description}>{repository.description}</Text>
+            <Text style={styles.language}>{repository.language}</Text>
+          </View>
+        </View>
+        <View style={styles.statsRow}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>
+              {formatNumber(repository.stargazersCount)}
+            </Text>
+            <Text style={styles.statLabel}>Stars</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>
+              {formatNumber(repository.forksCount)}
+            </Text>
+            <Text style={styles.statLabel}>Forks</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>
+              {formatNumber(repository.reviewCount)}
+            </Text>
+            <Text style={styles.statLabel}>Reviews</Text>
+          </View>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>
+              {formatNumber(repository.ratingAverage)}
+            </Text>
+            <Text style={styles.statLabel}>Rating</Text>
+          </View>
         </View>
       </View>
-      <View style={styles.statsRow}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>
-            {formatNumber(repository.stargazersCount)}
-          </Text>
-          <Text style={styles.statLabel}>Stars</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>
-            {formatNumber(repository.forksCount)}
-          </Text>
-          <Text style={styles.statLabel}>Forks</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>
-            {formatNumber(repository.reviewCount)}
-          </Text>
-          <Text style={styles.statLabel}>Reviews</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>
-            {formatNumber(repository.ratingAverage)}
-          </Text>
-          <Text style={styles.statLabel}>Rating</Text>
-        </View>
-      </View>
+      <View style={styles.divider} />
     </View>
-    <View style={styles.divider} />
-  </View>
-);
+  );
+};
 
 export default RepositoryItem;
