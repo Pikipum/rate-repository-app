@@ -13,8 +13,6 @@ const ItemSeparator = () => <View style={styles.separator} />;
 const RepositoryList = () => {
   const { repositories } = useRepositories();
 
-  console.log(repositories);
-
   return (
     <FlatList
       data={repositories}
