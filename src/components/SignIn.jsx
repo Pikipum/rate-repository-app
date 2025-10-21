@@ -2,6 +2,7 @@ import Text from "./Text";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { useFormik, yupToFormErrors } from "formik";
 import * as yup from "yup";
+import useSignIn from "../hooks/useSignIn";
 
 const styles = StyleSheet.create({
   separator: {
@@ -41,10 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const initialValues = {
-  username: "",
-  password: "",
-};
+const initialValues = { username: "", password: "" };
 
 const validationSchema = yup.object().shape({
   username: yup
@@ -57,36 +55,81 @@ const validationSchema = yup.object().shape({
     .required("Password is required"),
 });
 
-const SignIn = ({ onSubmit }) => {
+const SignIn = ({ accessStorage }) => {
+  const [signIn] = useSignIn();
+
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit,
+    validateOnBlur: true,
+    validateOnChange: true,
+    onSubmit: async (values, { setSubmitting, setStatus }) => {
+      try {
+        setStatus(undefined);
+        const data = await signIn({
+          username: values.username,
+          password: values.password,
+        });
+        console.log(data);
+        await accessStorage.setAccessToken(data.accessToken);
+      } catch (e) {
+        setStatus(e?.message || "Sign in failed");
+      } finally {
+        setSubmitting(false);
+      }
+    },
   });
+
+  const {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    status,
+  } = formik;
 
   return (
     <View style={styles.separator}>
       <TextInput
-        style={formik.errors.username ? styles.inputError : styles.input}
+        style={
+          touched.username && errors.username ? styles.inputError : styles.input
+        }
         placeholder="Username"
-        value={formik.values.username}
-        onChangeText={formik.handleChange("username")}
+        autoCapitalize="none"
+        value={values.username}
+        onChangeText={handleChange("username")}
+        onBlur={handleBlur("username")}
+        testID="usernameField"
       />
-      {formik.touched.username && formik.errors.username && (
-        <Text style={styles.error}>{formik.errors.username}</Text>
+      {touched.username && errors.username && (
+        <Text style={styles.error}>{errors.username}</Text>
       )}
+
       <TextInput
-        style={formik.errors.password ? styles.inputError : styles.input}
-        secureTextEntry={true}
+        style={
+          touched.password && errors.password ? styles.inputError : styles.input
+        }
+        secureTextEntry
         placeholder="Password"
-        value={formik.values.password}
-        onChangeText={formik.handleChange("password")}
+        autoCapitalize="none"
+        value={values.password}
+        onChangeText={handleChange("password")}
+        onBlur={handleBlur("password")}
+        testID="passwordField"
       />
-      {formik.touched.password && formik.errors.password && (
-        <Text style={styles.error}>{formik.errors.password}</Text>
+      {touched.password && errors.password && (
+        <Text style={styles.error}>{errors.password}</Text>
       )}
-      <Pressable onPress={formik.handleSubmit}>
-        <Text style={styles.login}>Sign in</Text>
+
+      {status && <Text style={styles.error}>{status}</Text>}
+
+      <Pressable onPress={handleSubmit} disabled={isSubmitting}>
+        <Text style={styles.login}>
+          {isSubmitting ? "Signing in..." : "Sign in"}
+        </Text>
       </Pressable>
     </View>
   );
