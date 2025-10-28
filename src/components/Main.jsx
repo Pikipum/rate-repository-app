@@ -4,7 +4,6 @@ import RepositoryList from "./RepositoryList";
 import AppBar from "./AppBar";
 import { Route, Routes, Navigate } from "react-router-native";
 import SignIn from "./SignIn";
-import AuthStorage from "../utils/authStorage";
 
 const styles = StyleSheet.create({
   container: {
@@ -19,17 +18,12 @@ const Main = () => {
     console.log(values);
   };
 
-  const accessStorage = new AuthStorage("accesstoken");
-
   return (
     <View style={styles.container}>
       <AppBar />
       <Routes>
         <Route path="/" element={<RepositoryList />} />
-        <Route
-          path="/signin"
-          element={<SignIn onSubmit={onSubmit} accessStorage={accessStorage} />}
-        />
+        <Route path="/signin" element={<SignIn onSubmit={onSubmit} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </View>

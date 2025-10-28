@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { useFormik, yupToFormErrors } from "formik";
 import * as yup from "yup";
 import useSignIn from "../hooks/useSignIn";
+import { useNavigate } from "react-router-native";
 
 const styles = StyleSheet.create({
   separator: {
@@ -55,8 +56,9 @@ const validationSchema = yup.object().shape({
     .required("Password is required"),
 });
 
-const SignIn = ({ accessStorage }) => {
+const SignIn = () => {
   const [signIn] = useSignIn();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues,
@@ -70,8 +72,9 @@ const SignIn = ({ accessStorage }) => {
           username: values.username,
           password: values.password,
         });
-        console.log(data);
-        await accessStorage.setAccessToken(data.accessToken);
+        if (data?.accessToken) {
+          navigate("/", { replace: true });
+        }
       } catch (e) {
         setStatus(e?.message || "Sign in failed");
       } finally {
