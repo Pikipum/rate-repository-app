@@ -88,7 +88,7 @@ const formatNumber = (num) => {
 const RepositoryItem = ({ repository }) => {
   if (!repository) return null;
   return (
-    <View>
+    <View testID="repositoryItem">
       <View style={styles.card}>
         <View style={styles.topRow}>
           <Image
