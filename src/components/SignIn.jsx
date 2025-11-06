@@ -43,22 +43,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const initialValues = { username: "", password: "" };
+export const SignInContainer = ({ signIn, navigate }) => {
+  const initialValues = { username: "", password: "" };
 
-const validationSchema = yup.object().shape({
-  username: yup
-    .string()
-    .min(4, "Username must be longer than 4 characters")
-    .required("Username is required"),
-  password: yup
-    .string()
-    .min(6, "Password must have at least 6 characters")
-    .required("Password is required"),
-});
-
-const SignIn = () => {
-  const [signIn] = useSignIn();
-  const navigate = useNavigate();
+  const validationSchema = yup.object().shape({
+    username: yup
+      .string()
+      .min(4, "Username must be longer than 4 characters")
+      .required("Username is required"),
+    password: yup
+      .string()
+      .min(6, "Password must have at least 6 characters")
+      .required("Password is required"),
+  });
 
   const formik = useFormik({
     initialValues,
@@ -136,6 +133,13 @@ const SignIn = () => {
       </Pressable>
     </View>
   );
+};
+
+const SignIn = () => {
+  const [signIn] = useSignIn();
+  const navigate = useNavigate();
+
+  return <SignInContainer signIn={signIn} navigate={navigate} />;
 };
 
 export default SignIn;

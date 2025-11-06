@@ -1,11 +1,4 @@
-import { useState } from "react";
-import { Text, TextInput, Pressable, View } from "react-native";
-import {
-  render,
-  fireEvent,
-  screen,
-  within,
-} from "@testing-library/react-native";
+import { render, screen, within } from "@testing-library/react-native";
 import { RepositoryListContainer } from "../../components/RepositoryList";
 
 describe("RepositoryList", () => {
@@ -58,9 +51,6 @@ describe("RepositoryList", () => {
 
       const [firstRepositoryItem, secondRepositoryItem] =
         screen.getAllByTestId("repositoryItem");
-
-      // check for repo name, description, language, forks count, stargazers count,
-      // rating average and review counts
 
       expect(
         within(firstRepositoryItem).getByText("jaredpalmer/formik")
