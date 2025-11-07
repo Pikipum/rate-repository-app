@@ -48,6 +48,15 @@ const AppBar = () => {
                 Repositories
               </Text>
             </Link>
+            <Link to="/reviewform" style={styles.link} component={Pressable}>
+              <Text
+                color="textSecondary"
+                fontWeight="bold"
+                fontSize="subheading"
+              >
+                Create a review
+              </Text>
+            </Link>
             {user.data?.me ? (
               <Pressable onPress={handleLogout}>
                 <Text
