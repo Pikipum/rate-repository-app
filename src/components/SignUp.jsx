@@ -2,7 +2,7 @@ import Text from "./Text";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { useFormik, yupToFormErrors } from "formik";
 import * as yup from "yup";
-import useSignIn from "../hooks/useSignIn";
+import useSignUp from "../hooks/useSignUp";
 import { useNavigate } from "react-router-native";
 
 const styles = StyleSheet.create({
@@ -43,18 +43,23 @@ const styles = StyleSheet.create({
   },
 });
 
-export const SignInContainer = ({ signIn, navigate }) => {
-  const initialValues = { username: "", password: "" };
+export const SignUpContainer = ({ signUp, navigate }) => {
+  const initialValues = { username: "", password: "", confirmPassword: "" };
 
   const validationSchema = yup.object().shape({
     username: yup
       .string()
       .min(5, "Username must be longer than 5 characters")
+      .max(30, "Username must be shorter than 30 characters")
       .required("Username is required"),
     password: yup
       .string()
       .min(5, "Password must have at least 5 characters")
+      .max(50, "Password must be shorter than 50 characters")
       .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords must match"),
   });
 
   const formik = useFormik({
@@ -65,15 +70,15 @@ export const SignInContainer = ({ signIn, navigate }) => {
     onSubmit: async (values, { setSubmitting, setStatus }) => {
       try {
         setStatus(undefined);
-        const data = await signIn({
+        const data = await signUp({
           username: values.username,
           password: values.password,
         });
-        if (data?.accessToken) {
+        if (data) {
           navigate("/", { replace: true });
         }
       } catch (e) {
-        setStatus(e?.message || "Sign in failed");
+        setStatus(e?.message || "Sign up failed");
       } finally {
         setSubmitting(false);
       }
@@ -124,22 +129,40 @@ export const SignInContainer = ({ signIn, navigate }) => {
         <Text style={styles.error}>{errors.password}</Text>
       )}
 
+      <TextInput
+        style={
+          touched.confirmPassword && errors.confirmPassword
+            ? styles.inputError
+            : styles.input
+        }
+        secureTextEntry
+        placeholder="Confirm Password"
+        autoCapitalize="none"
+        value={values.confirmPassword}
+        onChangeText={handleChange("confirmPassword")}
+        onBlur={handleBlur("confirmPassword")}
+        testID="passwordField"
+      />
+      {touched.confirmPassword && errors.confirmPassword && (
+        <Text style={styles.error}>{errors.confirmPassword}</Text>
+      )}
+
       {status && <Text style={styles.error}>{status}</Text>}
 
       <Pressable onPress={handleSubmit} disabled={isSubmitting}>
         <Text style={styles.login}>
-          {isSubmitting ? "Signing in..." : "Sign in"}
+          {isSubmitting ? "Signing up..." : "Sign up"}
         </Text>
       </Pressable>
     </View>
   );
 };
 
-const SignIn = () => {
-  const [signIn] = useSignIn();
+const SignUp = () => {
+  const [signUp] = useSignUp();
   const navigate = useNavigate();
 
-  return <SignInContainer signIn={signIn} navigate={navigate} />;
+  return <SignUpContainer signUp={signUp} navigate={navigate} />;
 };
 
-export default SignIn;
+export default SignUp;

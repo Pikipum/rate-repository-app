@@ -48,35 +48,52 @@ const AppBar = () => {
                 Repositories
               </Text>
             </Link>
-            <Link to="/reviewform" style={styles.link} component={Pressable}>
-              <Text
-                color="textSecondary"
-                fontWeight="bold"
-                fontSize="subheading"
-              >
-                Create a review
-              </Text>
-            </Link>
             {user.data?.me ? (
-              <Pressable onPress={handleLogout}>
-                <Text
-                  color="textSecondary"
-                  fontWeight="bold"
-                  fontSize="subheading"
+              <>
+                <Pressable onPress={handleLogout} style={styles.link}>
+                  <Text
+                    color="textSecondary"
+                    fontWeight="bold"
+                    fontSize="subheading"
+                  >
+                    Sign out
+                  </Text>
+                </Pressable> 
+                <Link
+                  to="/reviewform"
+                  style={styles.link}
+                  component={Pressable}
                 >
-                  Sign out
-                </Text>
-              </Pressable>
+                  <Text
+                    color="textSecondary"
+                    fontWeight="bold"
+                    fontSize="subheading"
+                  >
+                    Create a review
+                  </Text>
+                </Link>
+              </>
             ) : (
-              <Link to="/signin" style={styles.link} component={Pressable}>
-                <Text
-                  color="textSecondary"
-                  fontWeight="bold"
-                  fontSize="subheading"
-                >
-                  Sign in
-                </Text>
-              </Link>
+              <>
+                <Link to="/signin" style={styles.link} component={Pressable}>
+                  <Text
+                    color="textSecondary"
+                    fontWeight="bold"
+                    fontSize="subheading"
+                  >
+                    Sign in
+                  </Text>
+                </Link>
+                <Link to="/signup" style={styles.link} component={Pressable}>
+                  <Text
+                    color="textSecondary"
+                    fontWeight="bold"
+                    fontSize="subheading"
+                  >
+                    Sign up
+                  </Text>
+                </Link>
+              </>
             )}
           </View>
         }
