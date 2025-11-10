@@ -50,6 +50,15 @@ const AppBar = () => {
             </Link>
             {user.data?.me ? (
               <>
+                <Link to="/myreviews" style={styles.link} component={Pressable}>
+                  <Text
+                    color="textSecondary"
+                    fontWeight="bold"
+                    fontSize="subheading"
+                  >
+                    My Reviews
+                  </Text>
+                </Link>
                 <Pressable onPress={handleLogout} style={styles.link}>
                   <Text
                     color="textSecondary"
