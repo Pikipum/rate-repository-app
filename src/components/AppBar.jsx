@@ -58,7 +58,7 @@ const AppBar = () => {
                   >
                     Sign out
                   </Text>
-                </Pressable> 
+                </Pressable>
                 <Link
                   to="/reviewform"
                   style={styles.link}

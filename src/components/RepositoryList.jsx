@@ -4,6 +4,8 @@ import useRepositories from "../hooks/useRepositories";
 import { useNavigate } from "react-router-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import RepositoryListHeader from "./RepositoryListHeader";
+import { useDebounce } from "use-debounce";
 
 const styles = StyleSheet.create({
   separator: {
@@ -27,10 +29,21 @@ export const RepositoryListContainer = ({
   selectedFilter,
   navigate,
   repositories,
+  searchQuery,
+  setSearchQuery,
 }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
+
+  const renderHeader = (searchQuery, setSearchQuery) => {
+    return (
+      <RepositoryListHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+    );
+  };
 
   return (
     <>
@@ -57,6 +70,7 @@ export const RepositoryListContainer = ({
           </Pressable>
         )}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={renderHeader(searchQuery, setSearchQuery)}
       />
     </>
   );
@@ -64,8 +78,10 @@ export const RepositoryListContainer = ({
 
 const RepositoryList = () => {
   const [selectedFilter, setSelectedFilter] = useState("LATEST");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [value] = useDebounce(searchQuery, 500);
   const navigate = useNavigate();
-  const { repositories } = useRepositories(selectedFilter);
+  const { repositories } = useRepositories(selectedFilter, value);
 
   return (
     <RepositoryListContainer
@@ -73,6 +89,8 @@ const RepositoryList = () => {
       setSelectedFilter={setSelectedFilter}
       navigate={navigate}
       repositories={repositories}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
     />
   );
 };
